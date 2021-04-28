@@ -1,4 +1,4 @@
-# py-osm-hadoom
+# py-osm-hadoop
 Generate rasterized maps from OSM map files, using Hadoop and MapReduce for data processing
 
 The implementation of this project is based on certain other github projects:
