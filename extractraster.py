@@ -9,12 +9,15 @@ start_time = time.time()
 
 conf = {
   "country": "georgia3",
+  "inpath": "",
+  "outpath": "",
   "minx": 40000,
   "maxx": 50000,
   "miny": 39990,
   "maxy": 47000,
 }
-filepath = "hdfs://10.10.1.247:9000/rasters/{}/part-00000".format(conf["country"])
+#filepath = "hdfs://10.10.1.247:9000/rasters/{}/part-00000".format(conf["country"])
+#outpath = "tiles/{}_tile{}to{};{}to{}.png".format(conf["country"], conf["minx"], conf["maxx"], conf["miny"], conf["maxy"])
 
 #spark setup
 sconf = SparkConf()
@@ -22,7 +25,7 @@ sconf.setMaster('local')
 sconf.setAppName('osmPreprocessing')
 sc = SparkContext(conf = sconf)
 
-
+filepath = conf["inpath"]
 rasterrdd = sc.textFile(filepath)
 #for some reason this treats each row of the 2d array as a pointer to the same underlying 1d array
 #rasterarr = [[0]*(conf["maxx"] - conf["minx"])]*(conf["maxy"] - conf["miny"])
@@ -36,7 +39,7 @@ for line in filteredraster:
   addtoarr(line, rasterarr, conf["minx"], conf["miny"])
 
 # output png image
-outpath = "tiles/{}_tile{}to{};{}to{}.png".format(conf["country"], conf["minx"], conf["maxx"], conf["miny"], conf["maxy"])
+outpath = conf["outpath"]
 png.from_array(rasterarr, 'L').save(outpath)
 
 

@@ -4,10 +4,16 @@ from defs import bintoint32
 import time
 import binascii
 
-start_time = time.time()
+# script config
 country = "georgia"
+inputpath = ""
+outputpath = ""
+if inputpath == "" or outputpath == "":
+  print "please specify paths for input and output locations!"
+  return
 
-f = open("../../data/{}-latest.osm.pbf".format(country), "rb")
+start_time = time.time()
+f = open(filepath, "rb")
 
 #spark setup
 conf = SparkConf()
@@ -43,10 +49,11 @@ while True:
     blobrecord = (bheader.type, hexblob)
     blobs.append(blobrecord)
 
+  # output must be written in multiple rounds due to memory limitations
   if bytesRead > 30000000:
     print("byte limit reached! outputting file #{}".format(outFileNum))
     rdd = sc.parallelize(blobs)
-    rdd.saveAsTextFile("hdfs://10.10.1.247:9000/preprocessed/{}/{}{}".format(country, country, outFileNum))
+    rdd.saveAsTextFile(outpath + "/{}".format(outFileNum))
     rdd = None
     blobs = []
     bytesRead = 0
@@ -55,7 +62,7 @@ while True:
 print("bytes read: {}".format(bytesRead))
 print("EOF reached! outputting file #{}".format(outFileNum))
 rdd = sc.parallelize(blobs)
-rdd.saveAsTextFile("hdfs://10.10.1.247:9000/preprocessed/{}/{}{}".format(country, country, outFileNum))
+rdd.saveAsTextFile(outpath + "/{}".format(outFileNum))
 end_time = time.time()
 
 print("time taken: {}".format(end_time - start_time))
