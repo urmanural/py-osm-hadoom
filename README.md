@@ -3,7 +3,7 @@ Generate rasterized maps from OSM map files, using Hadoop and MapReduce for data
 
 The implementation of this project is based on certain other github projects:
 * General processing outline and functionality of major processing steps: http://github.com/willtemperley/osm-hadoop
-* Extracting nodes/ways from compressed OSM data: http://github.com/qedus/osmpbf/blob/master/decode\_tag.go
+* Extracting nodes/ways from compressed OSM data: http://github.com/qedus/osmpbf/blob/master/decode_tag.go
 
 The code is missing several quality-of-life features, scripts not based on hadoop streaming must be edited to change input- and output locations.
 
