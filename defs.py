@@ -16,9 +16,8 @@ def parseBlob(blob):
   blobdata.ParseFromString(zlib.decompress(blob.zlib_data))
   return parsePrimitiveBlock(blobdata)
 
-#https://github.com/qedus/osmpbf/blob/master/decode_data.go
-#TODO: parse ways
-#TODO: optional? parse nodes, relations
+# code for parsePrimitiveBlock ported from qedus' "osmpbf" go code on github:
+## https://github.com/qedus/osmpbf/blob/master/decode_data.go
 def parsePrimitiveBlock(primitiveBlock):
   nodes = parseDenseNodes(primitiveBlock)
   ways = parseWays(primitiveBlock)
@@ -222,7 +221,6 @@ def drawline(x1,y1,x2,y2, scale, func, color):
       return drawminusy(round(x1/scale), round(y1/scale), round(x2/scale), round(y2/scale), func, color)
 
 def drawplusx(x1,y1,x2,y2, func, color):
-  #out = []
   dx = x2 - x1
   dy = y2 - y1
 
@@ -233,16 +231,13 @@ def drawplusx(x1,y1,x2,y2, func, color):
   while (x <= x2):
     pt = (x,y)
     func(pt, color)
-    #out.append(pt)
     x += 1
     err += dy
     if(2*err >= dx):
       y += 1
       err -= dx
-  #return out
 
 def drawminusx(x1,y1,x2,y2, func, color):
-  #out = []
   dx = x2 - x1
   dy = y2 - y1
 
@@ -253,16 +248,13 @@ def drawminusx(x1,y1,x2,y2, func, color):
   while (x <= x2):
     pt = (x,y)
     func(pt, color)
-    #out.append(pt)
     x += 1
     err += dy
     if(2*err < dx):
       y -= 1
       err += dx
-  #return out
 
 def drawplusy(x1,y1,x2,y2, func, color):
-  #out = []
   dx = x2 - x1
   dy = y2 - y1
 
@@ -273,16 +265,13 @@ def drawplusy(x1,y1,x2,y2, func, color):
   while (y <= y2):
     pt = (x,y)
     func(pt, color)
-    #out.append(pt)
     y += 1
     err += dx
     if(2*err >= dy):
       x += 1
       err -= dy
-  #return out
 
 def drawminusy(x1,y1,x2,y2, func, color):
-  #out = []
   dx = x2 - x1
   dy = y2 - y1
 
@@ -293,13 +282,11 @@ def drawminusy(x1,y1,x2,y2, func, color):
   while (y <= y2):
     pt = (x,y)
     func(pt, color)
-    #out.append(pt)
     y += 1
     err += dx
     if(2*err < dy):
       x -= 1
       err += dy
-  #return out
 
 # raster extraction
 
