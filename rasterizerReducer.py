@@ -6,14 +6,10 @@ import shapely.wkt as wkt
 import sys
 
 # for each pixel x y,z, output a single pixel per x y coordinate
-# which one?
+# selected pixel is currently simply the one with highest color value
 currentcoords = None
 bestcolor = None
-extremities = []
 for line in sys.stdin:
-  if line[:3] == "maxx":
-    extremities.append(line)
-    continue
   key, val = line.split("\t")
   try:
     val = int(val)
@@ -28,5 +24,3 @@ for line in sys.stdin:
     bestcolor = val
 if currentcoords == key:
   print '%s\t%s' % (currentcoords, bestcolor)
-for i in extremities:
-  print i

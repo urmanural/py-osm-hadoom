@@ -7,17 +7,16 @@ import binascii
 
 start_time = time.time()
 
+# y comes before x due to confusion between what latitude and longitude represent earlier in implementation
 conf = {
   "country": "georgia3",
   "inpath": "",
   "outpath": "",
-  "minx": 40000,
-  "maxx": 50000,
-  "miny": 39990,
-  "maxy": 47000,
+  "miny": 40000,
+  "maxy": 50000,
+  "minx": 39990,
+  "maxx": 47000,
 }
-#filepath = "hdfs://10.10.1.247:9000/rasters/{}/part-00000".format(conf["country"])
-#outpath = "tiles/{}_tile{}to{};{}to{}.png".format(conf["country"], conf["minx"], conf["maxx"], conf["miny"], conf["maxy"])
 
 #spark setup
 sconf = SparkConf()
@@ -27,12 +26,11 @@ sc = SparkContext(conf = sconf)
 
 filepath = conf["inpath"]
 rasterrdd = sc.textFile(filepath)
-#for some reason this treats each row of the 2d array as a pointer to the same underlying 1d array
-#rasterarr = [[0]*(conf["maxx"] - conf["minx"])]*(conf["maxy"] - conf["miny"])
-#but this doesn't
 rasterarr = []
-for i in range(conf["maxy"] - conf["miny"]):
-  rasterarr.append([0]*(conf["maxx"] - conf["minx"]))
+dy = conf["maxy"] - conf["miny"]
+dx = conf["maxx"] - conf["minx"]
+for i in range(dy):
+  rasterarr.append([0]*dx)
 
 filteredraster = rasterrdd.filter(lambda x: filtercoords(x, conf["minx"], conf["miny"], conf["maxx"], conf["maxy"])).collect()
 for line in filteredraster:
@@ -41,7 +39,6 @@ for line in filteredraster:
 # output png image
 outpath = conf["outpath"]
 png.from_array(rasterarr, 'L').save(outpath)
-
 
 end_time = time.time()
 print("time taken: {}".format(end_time - start_time))

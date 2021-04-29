@@ -29,7 +29,7 @@ def parseWays(pb):
   outways = []
   ways = pb.primitivegroup[0].ways
   st = pb.stringtable.s
-  dateGranularity = pb.date_granularity
+  #dateGranularity = pb.date_granularity
 
   for i in range(len(ways)):
     way = ways[i]
@@ -42,7 +42,7 @@ def parseWays(pb):
       nodeID = o + nodeID
       nodeIDs.append(nodeID)
 
-    info = extractInfo(st, way.info, dateGranularity)
+    #info = extractInfo(st, way.info, dateGranularity)
 
     newway = {}
     newway["type"] = "way"
@@ -53,7 +53,7 @@ def parseWays(pb):
     for o in range(len(tags[0])):
       newway["keys"].append(tags[0][o])
       newway["vals"].append(tags[1][o])
-    newway["info"] = way.info
+    #newway["info"] = way.info
     outways.append(newway)
 
   return outways
@@ -62,7 +62,7 @@ def parseDenseNodes(pb):
   dense = pb.primitivegroup[0].dense
   st = pb.stringtable.s
   granularity = pb.granularity
-  dateGranularity = pb.date_granularity
+  #dateGranularity = pb.date_granularity
   latOffset = pb.lat_offset
   lonOffset = pb.lon_offset
 
@@ -70,28 +70,28 @@ def parseDenseNodes(pb):
   deltaID = 0
   deltalat = 0
   deltalon = 0
-  state = denseInfoState()
-  tu = tagUnpacker(st, dense.keys_vals, 0)
+  #state = denseInfoState()
+  #tu = tagUnpacker(st, dense.keys_vals, 0)
   for i in range(len(dense.id)):
     deltaID += dense.id[i]
     deltalat += dense.lat[i]
     deltalon += dense.lon[i]
     latOff = (latOffset + granularity*deltalat)
     lonOff = (lonOffset + granularity*deltalon)
-    tags = tu.next()
-    info = extractDenseInfo(state, st, dense.denseinfo, i, dateGranularity)
+    #tags = tu.next()
+    #info = extractDenseInfo(state, st, dense.denseinfo, i, dateGranularity)
 
     node = {}
     node["type"] = "node"
     node["id"] = deltaID
     node["lat"] = latOff
     node["lon"] = lonOff
-    node["keys"] = []
-    node["vals"] = []
-    for o in range(len(tags[0])):
-      node["keys"].append(tags[0][o])
-      node["vals"].append(tags[1][o])
-    node["info"]= info
+    #node["keys"] = []
+    #node["vals"] = []
+    #for o in range(len(tags[0])):
+    #  node["keys"].append(tags[0][o])
+    #  node["vals"].append(tags[1][o])
+    #node["info"]= info
     outnodes.append(node)
   return outnodes
 
@@ -303,7 +303,9 @@ def drawminusy(x1,y1,x2,y2, func, color):
 
 # raster extraction
 
-# line in raster/{country}/part-00000 = "coord1,coord2\tcolorint"
+# line in raster/{country}/part-00000 = "ycoord,xcoord\tcolorint"
+# coords are y,x rather than x,y due to confusion between latitude and longitude,
+# code has been modified to compensate
 def filtercoords(line, minx, miny, maxx, maxy):
   try:
     coords = line.split("\t")[0].split(",")
@@ -315,14 +317,14 @@ def filtercoords(line, minx, miny, maxx, maxy):
   except:
     return False
 
-def addtoarr(line, arr, minx=0, miny=0):
+def addtoarr(line, arr, minx=0, maxy=0):
   try:
     coords, val = line.split("\t")
     x = int(coords.split(",")[1])
     y = int(coords.split(",")[0])
     arrlenx = len(arr[0])
     arrleny = len(arr)
-    arr[y - miny][x - minx] = int(val)*17
+    arr[maxy - y][x - minx] = int(val)*17
     return True
   except:
     return False
