@@ -41,9 +41,6 @@ while True:
 
   rawblob = f.read(bheader.datasize)
   hexblob = binascii.hexlify(rawblob)
-  #blob = Blob()
-  #blob.ParseFromString(f.read(bheader.datasize))
-  #zdata = blob.zlib_data
   bytesRead += bheader.datasize
   if bheader.type == "OSMData":
     blobrecord = (bheader.type, hexblob)

@@ -12,7 +12,7 @@ def getgeom(ways, nodes):
   #sort []nodes by node.ordinal
   nodes.sort(key=lambda x:x["ordinal"])
 
-  #extract just coords (shapely.geometry.Point()-s?) from sorted []nodes
+  #extract just coords from sorted []nodes
   coords = []
   for i in nodes:
     point = gm.Point(long(i["lat"]), long(i["lon"]))

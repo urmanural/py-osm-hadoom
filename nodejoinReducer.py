@@ -20,6 +20,7 @@ for line in sys.stdin:
 
   #if node/waynode
   if vals["type"] == "node":
+    # when all nodes for one ID have been handled, output naand start processing next node
     if key != currentID:
       outVals["nodeID"] = currentID
       try:

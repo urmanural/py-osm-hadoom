@@ -17,7 +17,6 @@ for line in sys.stdin:
     #map way
     if entity["type"] == "way":
       #map wayNodes to their nodeID
-
       wayNodeVals = {"type": "node", "wayID": entity["id"], "ordinal": -1}
       for nodeID in entity["refs"]:
         wayNodeVals["ordinal"] = wayNodeVals["ordinal"] + 1
